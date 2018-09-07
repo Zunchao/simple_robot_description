@@ -29,13 +29,15 @@
   </node>
 
   <node pkg="joint_state_publisher" type="joint_state_publisher" name="joint_state_publisher" >
-      <param name="use_gui" value="true" />
+      <param name="use_gui" value="false" />
       <param name="rate" value="50" />
   </node>
   <remap from="/joint_states" to="/simple_robot/joint_states" />
   <!-- Fake Calibration -->
   <!--<node pkg="rostopic" type="rostopic" name="fake_joint_calibration"
         args="pub /calibrated std_msgs/Bool true" />-->
+  <!--<node pkg="tf" type="static_transform_publisher" name="odom_right_wheel_broadcaster" args="0 0 0 0 0 0 /mobile_base_link /wheel_right_link 100" />
+  <node pkg="tf" type="static_transform_publisher" name="odom_left_wheel_broadcaster" args="0 0 0 0 0 0 /mobile_base_link /wheel_left_link 100" />-->
 
   <rosparam file="$(find simple_robot_description)/controller/gazebo_control.yaml" command="load"/>
   <!-- joint_state_controller -->
