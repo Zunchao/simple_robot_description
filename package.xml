@@ -61,9 +61,9 @@
   <build_depend>robot_state_publisher</build_depend>
   <build_depend>controller_manager</build_depend>
   <build_depend>controller_manager_msgs</build_depend>
-  <run_depend>robot_state_publisher</run_depend>
-  <run_depend>controller_manager</run_depend>
-  <run_depend>controller_manager_msgs</run_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>controller_manager</exec_depend>
+  <exec_depend>controller_manager_msgs</exec_depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->
