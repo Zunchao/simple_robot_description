@@ -22,29 +22,23 @@
   <!-- ros_control plugin -->
   <gazebo>
     <plugin filename="libgazebo_ros_control.so" name="gazebo_ros_control">
-      <robotNamespace>/simple_robot</robotNamespace>
-      <!--<jointName>arm_1_joint, arm_2_joint, arm_3_joint, arm_4_joint, arm_5_joint, arm_6_joint, arm_7_joint, arm_8_joint, wheel_right_joint, wheel_left_joint</jointName>
-      <robotParam>/robot_description</robotParam>-->
+      <robotNamespace>/</robotNamespace>
+      <!--jointName>arm_1_joint, arm_2_joint, arm_3_joint, arm_4_joint, arm_5_joint, arm_6_joint, arm_7_joint, arm_8_joint, wheel_right_joint, wheel_left_joint</jointName>
+      <robotParam>/robot_description</robotParam-->
       <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
     </plugin>
   </gazebo>
-  <!-- Left Wheel -->
-  <gazebo reference="wheel_right_link">
-    <mu1>1.0</mu1>
-    <mu2>1.0</mu2>
-    <kp>10000000.0</kp>
-    <kd>1.0</kd>
-    <fdir1 value="1 0 0"/>
-  </gazebo>
   <!-- Base Link -->
   <gazebo reference="mobile_base_link">
+    <turnGravityOff>false</turnGravityOff>
   </gazebo>
   <gazebo reference="castor_front_collision">
+    <turnGravityOff>false</turnGravityOff>
     <mu1>0.0</mu1>
     <mu2>0.0</mu2>
   </gazebo>
-  <!-- Base Link -->
-  <!--  <gazebo reference="mobile_base_link">
+  <!-- Base Link >
+ <gazebo reference="mobile_base_link">
     <surface>
       <friction>
         <ode>
@@ -55,9 +49,19 @@
         </ode>
       </friction>
     </surface>
-  </gazebo>-->
+  </gazebo-->
   <!-- Right Wheel -->
   <gazebo reference="wheel_right_link">
+    <turnGravityOff>false</turnGravityOff>
+    <mu1>1.0</mu1>
+    <mu2>1.0</mu2>
+    <kp>10000000.0</kp>
+    <kd>1.0</kd>
+    <fdir1 value="1 0 0"/>
+  </gazebo>
+  <!-- Left Wheel -->
+  <gazebo reference="wheel_left_link">
+    <turnGravityOff>false</turnGravityOff>
     <mu1>1.0</mu1>
     <mu2>1.0</mu2>
     <kp>10000000.0</kp>
@@ -72,11 +76,9 @@
       <updateRate>30.0</updateRate>
     </plugin>
   </gazebo>-->
-  <!--  <gazebo>
-    <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
-
-      <robotNamespace>/simple_robot</robotNamespace>
-    		  
+  <gazebo>
+    <plugin filename="libgazebo_ros_diff_drive.so" name="differential_drive_controller">
+      <robotNamespace>/</robotNamespace>
       <alwaysOn>true</alwaysOn>
       <updateRate>100</updateRate>
       <leftJoint>wheel_left_joint</leftJoint>
@@ -85,12 +87,10 @@
       <wheelDiameter>0.2</wheelDiameter>
       <torque>20</torque>
       <commandTopic>/simple_robot/mobile_base_controller/cmd_vel</commandTopic>
-      <odometryTopic>odom</odometryTopic>
-      <odometryFrame>map</odometryFrame>
+      <!--odometryTopic>odom</odometryTopic>
+      <odometryFrame>odom</odometryFrame-->
       <robotBaseFrame>mobile_base_link</robotBaseFrame>
-      
       <legacyMode>false</legacyMode>
-      
       <rosDebugLevel>Debug</rosDebugLevel>
       <publishWheelTF>true</publishWheelTF>
       <publishWheelJointState>true</publishWheelJointState>
@@ -99,11 +99,12 @@
       <publishTf>1</publishTf>
       <odometrySource>encoder</odometrySource>
     </plugin>
-
+  </gazebo>
+  <!--gazebo>
     <plugin name="joint_state_publisher" filename="libgazebo_ros_joint_state_publisher.so">
     <jointName>wheel_left_joint, wheel_right_joint</jointName>
     </plugin>
-  </gazebo>-->
+  </gazebo-->
   <gazebo reference="mobile_base_link">
     <gravity>true</gravity>
     <self_collide>false</self_collide>
@@ -171,6 +172,7 @@
       <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
     </joint>
     <actuator name="wheel_right_motor">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
@@ -181,6 +183,7 @@
       <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
     </joint>
     <actuator name="wheel_left_motor">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
@@ -293,13 +296,13 @@
         <box size="0.6 0.4 0.2"/>
       </geometry>
     </collision>
-    <inertial>
-      <mass value="50"/>
-      <origin rpy="0 0 0" xyz="0 0 0.15"/>
-      <inertia ixx="0.833333333333" ixy="0" ixz="0" iyy="1.66666666667" iyz="0" izz="1.66666666667"/>
-    </inertial>
+    <!--inertial>
+      <mass value="${chassisMass}"/>
+      <origin rpy="0 0 0" xyz="0 0 ${chassisHeight/2+wheelRadius/2}"/>
+      <xacro:box_inertia m="${chassisMass}" x="${chassisLength}" y="${chassisWidth}" z="${chassisHeight}"/>
+    </inertial-->
     <!--castor-->
-    <visual>
+    <visual name="castor_front_visual">
       <origin rpy="0 0 0" xyz="-0.2 0 0"/>
       <geometry>
         <sphere radius="0.05"/>
@@ -312,11 +315,11 @@
         <sphere radius="0.05"/>
       </geometry>
     </collision>
-    <inertial>
-      <mass value="5"/>
+    <!--inertial>
+      <mass value="${casterMass}"/>
       <origin rpy="0 0 0" xyz="-0.2 0 0"/>
-      <inertia ixx="0.005" ixy="0" ixz="0" iyy="0.005" iyz="0" izz="0.005"/>
-    </inertial>
+      <xacro:sphere_inertia m="${casterMass}" r="${casterRadius}"/>
+    </inertial-->
   </link>
   <link name="mobile_dummy_link">
   </link>
@@ -331,19 +334,19 @@
       <geometry>
         <cylinder length="0.05" radius="0.1"/>
       </geometry>
-      <origin rpy="0 1.57079632679 1.57079632679" xyz="0 0 0"/>
+      <origin rpy="1.57079632679 0 0" xyz="0 0 0"/>
       <material name="Schunk/Black"/>
     </visual>
     <collision>
-      <origin rpy="0 1.57079632679 1.57079632679" xyz="0 0 0"/>
+      <origin rpy="1.57079632679 0 0" xyz="0 0 0"/>
       <geometry>
         <cylinder length="0.05" radius="0.1"/>
       </geometry>
     </collision>
     <inertial>
-      <mass value="5"/>
-      <origin rpy="0 1.57079632679 1.57079632679" xyz="0 0 0"/>
-      <inertia ixx="0.0135416666667" ixy="0" ixz="0" iyy="0.0135416666667" iyz="0" izz="0.025"/>
+      <mass value="0.5"/>
+      <origin rpy="1.57079632679 0 0" xyz="0 0 0"/>
+      <inertia ixx="0.00135416666667" ixy="0" ixz="0" iyy="0.00135416666667" iyz="0" izz="0.0025"/>
     </inertial>
   </link>
   <joint name="wheel_right_joint" type="continuous">
@@ -360,19 +363,19 @@
       <geometry>
         <cylinder length="0.05" radius="0.1"/>
       </geometry>
-      <origin rpy="0 1.57079632679 1.57079632679" xyz="0 0 0"/>
+      <origin rpy="1.57079632679 0 0" xyz="0 0 0"/>
       <material name="Schunk/Black"/>
     </visual>
     <collision>
-      <origin rpy="0 1.57079632679 1.57079632679" xyz="0 0 0"/>
+      <origin rpy="1.57079632679 0 0" xyz="0 0 0"/>
       <geometry>
         <cylinder length="0.05" radius="0.1"/>
       </geometry>
     </collision>
     <inertial>
-      <mass value="5"/>
-      <origin rpy="0 1.57079632679 1.57079632679" xyz="0 0 0"/>
-      <inertia ixx="0.0135416666667" ixy="0" ixz="0" iyy="0.0135416666667" iyz="0" izz="0.025"/>
+      <mass value="0.5"/>
+      <origin rpy="1.57079632679 0 0" xyz="0 0 0"/>
+      <inertia ixx="0.00135416666667" ixy="0" ixz="0" iyy="0.00135416666667" iyz="0" izz="0.0025"/>
     </inertial>
   </link>
   <joint name="wheel_left_joint" type="continuous">

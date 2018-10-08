@@ -7,8 +7,6 @@
   <arg name="headless" default="false"/>
   <arg name="debug" default="false"/>
   <arg name="model" default="$(find simple_robot_description)/urdf/simple_robot.urdf.xacro"/>
-  <arg name="rvizconfig" default="$(find urdf_tutorial)/rviz/urdf.rviz"/>
-
   <!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
     <arg name="debug" value="$(arg debug)" />
@@ -18,32 +16,16 @@
     <arg name="headless" value="$(arg headless)"/>
     <arg name="verbose" value="true"/>
   </include>
-  <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)"/>
   <!-- send robot urdf to param server -->
   <param name="robot_description" command="$(find xacro)/xacro --inorder $(arg model)" />
-  <!-- push robot_description to factory and spawn robot in gazebo -->
-  <node name="spawn_gazebo_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model simple_robot -z 0.1" respawn="false" output="screen" />
-
-  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
-    respawn="false" output="screen">
-  </node>
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen"/>
 
   <node pkg="joint_state_publisher" type="joint_state_publisher" name="joint_state_publisher" >
       <param name="use_gui" value="false" />
       <param name="rate" value="50" />
   </node>
-  <remap from="/joint_states" to="/simple_robot/joint_states" />
-
-  <include file="$(find simple_moveit_config)/launch/move_group.launch">
-    <arg name="publish_monitored_planning_scene" value="true" />
-  </include>
-  <node name="move_group_interface_demo" pkg="move_group_interface" type="move_group_interface_demo" respawn="false" output="screen">
-  </node>
-  <!-- Fake Calibration -->
-  <!--<node pkg="rostopic" type="rostopic" name="fake_joint_calibration"
-        args="pub /calibrated std_msgs/Bool true" />-->
-  <!--<node pkg="tf" type="static_transform_publisher" name="odom_right_wheel_broadcaster" args="0 0 0 0 0 0 /mobile_base_link /wheel_right_link 100" />
-  <node pkg="tf" type="static_transform_publisher" name="odom_left_wheel_broadcaster" args="0 0 0 0 0 0 /mobile_base_link /wheel_left_link 100" />-->
+  <!-- push robot_description to factory and spawn robot in gazebo -->
+  <node name="spawn_gazebo_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model simple_robot -z 0.1" respawn="false" output="screen" />
 
   <rosparam file="$(find simple_robot_description)/controller/gazebo_control.yaml" command="load"/>
   <!-- joint_state_controller -->
@@ -52,11 +34,11 @@
   <rosparam file="$(find simple_robot_description)/controller/wheel_controller.yaml" command="load"/>
   <!--rosparam file="$(find simple_robot_description)/controller/mobile_base_controller.yaml" command="load"/-->
 
-  <node name="controller_spawner" pkg="controller_manager" type="spawner" args="/simple_robot/arm_controller /simple_robot/joint_state_controller /simple_robot/wheel_velocity_controller" respawn="true" output="screen"/>
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" args="/arm_controller /joint_state_controller /wheel_velocity_controller" respawn="true" output="screen"/>
 
   <!--<node name="controller_spawner_stopped" pkg="controller_manager" type="spawner" respawn="false" ns="/simple_robot" args="&#45;&#45;stopped wheel_velocity_controller"/>-->
   <!-- upload script server parameters -->
-  <rosparam command="load" ns="/simple_robot" file="$(find simple_robot_description)/controller/joint_configurations.yaml"/>
+  <rosparam command="load" file="$(find simple_robot_description)/controller/joint_configurations.yaml"/>
 
   <node name="rqt_robot_steering" pkg="rqt_robot_steering" type="rqt_robot_steering">
       <param name="default_topic" value="/simple_robot/mobile_base_controller/cmd_vel"/>

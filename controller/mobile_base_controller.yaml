@@ -19,7 +19,7 @@ simple_robot:
     wheel_radius_multiplier: 1.0 # default: 1.0
 
     # Velocity commands timeout [s], default 0.5
-    cmd_vel_timeout: 0.25
+    cmd_vel_timeout: 0.9
     # Top level frame (link) of the robot description
     base_frame_id: mobile_base_link
     #odom_frame_id: odom
