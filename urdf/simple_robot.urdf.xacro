@@ -34,7 +34,7 @@
   </xacro:macro>
 
   <xacro:include filename="$(find simple_robot_description)/urdf/materials.urdf.xacro"/>
-  <xacro:include filename="$(find simple_robot_description)/urdf/sr.gazebo"/>
+  <xacro:include filename="$(find simple_robot_description)/urdf/simple_robot.gazebo"/>
   <xacro:include filename="$(find simple_robot_description)/urdf/common.xacro"/>
   <robotBaseFrame>mobile_base_link</robotBaseFrame>
 
