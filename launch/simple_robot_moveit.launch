@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="paused" default="false"/>
+  <arg name="gui" default="true"/>
+  <arg name="headless" default="false"/>
+  <arg name="debug" default="false"/>
+  <arg name="sim" default="true" />
+  <arg name="robot_ip" unless="$(arg sim)" />
+  <arg name="model" default="$(find simple_robot_description)/urdf/simple_robot.urdf.xacro"/>
+  <arg name="rvizconfig" default="$(find simple_moveit_config)/launch/moveit.rviz"/>
+  <!--arg name="rvizconfig" default="$(find simple_robot_description)/rviz/urdf.rviz"/-->
+
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)">
+    <rosparam command="load" file="$(find simple_moveit_config)/config/kinematics.yaml"/>
+  </node>
+  
+  <rosparam command="load" file="$(find simple_moveit_config)/config/joint_names.yaml"/>
+  <rosparam command="load" file="$(find simple_moveit_config)/config/joint_names_wheel.yaml"/>
+  <include file="$(find simple_moveit_config)/launch/planning_context.launch" >
+    <arg name="load_robot_description" value="true" />
+  </include>
+
+  <group if="$(arg sim)">
+    <include file="$(find industrial_robot_simulator)/launch/robot_interface_simulator.launch" />
+  </group>
+
+  <group unless="$(arg sim)">
+    <include file="$(find [robot_interface_pkg])/launch/robot_interface.launch" >
+      <arg name="robot_ip" value="$(arg robot_ip)"/>
+    </include>
+  </group>
+
+  <include file="$(find simple_moveit_config)/launch/move_group.launch">
+    <arg name="publish_monitored_planning_scene" value="true" />
+  </include>
+  
+  <!--include file="$(find simple_moveit_config)/launch/default_warehouse_db.launch" /-->
+
+  <remap from="/joint_states" to="/simple_robot/joint_states" />
+  <remap from="/controller_joint_names" to="/simple_robot/controller_joint_names"/>
+</launch>

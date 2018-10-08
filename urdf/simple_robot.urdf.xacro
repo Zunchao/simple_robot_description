@@ -6,15 +6,15 @@
   <xacro:property name="chassisHeight" value="0.2"/>
   <xacro:property name="chassisLength" value="0.6"/>
   <xacro:property name="chassisWidth" value="0.4"/>
-  <xacro:property name="chassisMass" value="50"/>
+  <xacro:property name="chassisMass" value="10"/>
 
   <xacro:property name="casterRadius" value="0.05"/>
-  <xacro:property name="casterMass" value="5"/>
+  <xacro:property name="casterMass" value="0.5"/>
 
   <xacro:property name="wheelWidth" value="0.05"/>
   <xacro:property name="wheelRadius" value="0.1"/>
   <xacro:property name="wheelPos" value="0.2"/>
-  <xacro:property name="wheelMass" value="5"/>
+  <xacro:property name="wheelMass" value="0.5"/>
 
   <xacro:macro name="cylinder_inertia" params="m r h">
     <inertia ixx="${m*(3*r*r+h*h)/12}" ixy="0" ixz="0" iyy="${m*(3*r*r+h*h)/12}" iyz="0" izz="${m*r*r/2}"/>
@@ -52,34 +52,35 @@
         <box size="${chassisLength} ${chassisWidth} ${chassisHeight}"/>
       </geometry>
     </collision>
-    <inertial>
+    <!--inertial>
       <mass value="${chassisMass}"/>
       <origin rpy="0 0 0" xyz="0 0 ${chassisHeight/2+wheelRadius/2}"/>
       <xacro:box_inertia m="${chassisMass}" x="${chassisLength}" y="${chassisWidth}" z="${chassisHeight}"/>
-    </inertial>
-  <!--castor-->
-  <visual >
+    </inertial-->
+    <!--castor-->
+    <visual name='castor_front_visual'>
       <origin xyz="-0.2 0 0" rpy="0 0 0" />
       <geometry>
         <sphere radius="${casterRadius}"/>
       </geometry>
       <material name="Schunk/DarkGolden"/>
-  </visual>
-  <collision name='castor_front_collision'>
+    </visual>
+    <collision name='castor_front_collision'>
       <origin xyz="-0.2 0 0" rpy="0 0 0" />
       <geometry>
         <sphere radius="${casterRadius}"/>
       </geometry>
-  </collision>
-  <inertial>
+    </collision>
+    <!--inertial>
       <mass value="${casterMass}"/>
       <origin rpy="0 0 0" xyz="-0.2 0 0"/>
       <xacro:sphere_inertia m="${casterMass}" r="${casterRadius}"/>
-    </inertial>
+    </inertial-->
   </link>
 
   <link name="mobile_dummy_link">
   </link>
+
   <joint name="mobile_dummy_joint" type="fixed">
     <parent link="mobile_base_link"/>
     <child link="mobile_dummy_link"/>

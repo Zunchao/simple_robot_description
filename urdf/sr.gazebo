@@ -4,9 +4,9 @@
 <!-- ros_control plugin -->
   <gazebo>
     <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
-      <robotNamespace>/simple_robot</robotNamespace>
-      <!--<jointName>arm_1_joint, arm_2_joint, arm_3_joint, arm_4_joint, arm_5_joint, arm_6_joint, arm_7_joint, arm_8_joint, wheel_right_joint, wheel_left_joint</jointName>
-      <robotParam>/robot_description</robotParam>-->
+      <robotNamespace>/</robotNamespace>
+      <!--jointName>arm_1_joint, arm_2_joint, arm_3_joint, arm_4_joint, arm_5_joint, arm_6_joint, arm_7_joint, arm_8_joint, wheel_right_joint, wheel_left_joint</jointName>
+      <robotParam>/robot_description</robotParam-->
       <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
     </plugin>
   </gazebo>
@@ -20,8 +20,8 @@
     <mu1>0.0</mu1>
     <mu2>0.0</mu2>
  </gazebo>
-  <!-- Base Link -->
-<!--  <gazebo reference="mobile_base_link">
+  <!-- Base Link >
+ <gazebo reference="mobile_base_link">
     <surface>
       <friction>
         <ode>
@@ -32,7 +32,7 @@
         </ode>
       </friction>
     </surface>
-  </gazebo>-->
+  </gazebo-->
   <!-- Right Wheel -->
   <gazebo reference="wheel_right_link">
     <turnGravityOff>false</turnGravityOff>
@@ -62,10 +62,10 @@
     </plugin>
   </gazebo>-->
 
-<!--  <gazebo>
+ <gazebo>
     <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
 
-      <robotNamespace>/simple_robot</robotNamespace>
+      <robotNamespace>/</robotNamespace>
     		  
       <alwaysOn>true</alwaysOn>
       <updateRate>100</updateRate>
@@ -75,8 +75,8 @@
       <wheelDiameter>0.2</wheelDiameter>
       <torque>20</torque>
       <commandTopic>/simple_robot/mobile_base_controller/cmd_vel</commandTopic>
-      <odometryTopic>odom</odometryTopic>
-      <odometryFrame>map</odometryFrame>
+      <!--odometryTopic>odom</odometryTopic>
+      <odometryFrame>odom</odometryFrame-->
       <robotBaseFrame>mobile_base_link</robotBaseFrame>
       
       <legacyMode>false</legacyMode>
@@ -89,10 +89,11 @@
       <publishTf>1</publishTf>
       <odometrySource>encoder</odometrySource>
     </plugin>
-
+  </gazebo>
+ <!--gazebo>
     <plugin name="joint_state_publisher" filename="libgazebo_ros_joint_state_publisher.so">
     <jointName>wheel_left_joint, wheel_right_joint</jointName>
     </plugin>
-  </gazebo>-->
+  </gazebo-->
 
 </robot>
